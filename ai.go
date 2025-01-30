@@ -74,7 +74,12 @@ func NewAIModel(apiKey string, model Model) *AIModel {
     }
 }
 
-func (m *AIModel) CreateBid(desc string) (string, error) {
+func (m *AIModel) CreateBid(project *Project, temp float64) (string, error) {
+    if temp == 0.0 {
+        temp = defaultTemp
+    }
+    fmt.Println("temp", temp)
+
     messages := []Message{
         {
             Role: SystemRole,
@@ -82,14 +87,14 @@ func (m *AIModel) CreateBid(desc string) (string, error) {
         },
         {
             Role: UserRole,
-            Content: desc,
+            Content: project.Title + "\n" + project.Description,
         },
     }
 
     res, err := m.makeRequest(&Payload{
         Model: m.model,
         Messages: messages,
-        Temp: defaultTemp,
+        Temp: temp,
     })
     if err != nil {
         return "", err

@@ -36,3 +36,8 @@ func TestMakeUrl(t *testing.T) {
     }
 }
 
+func TestGetProject(t *testing.T) {
+    projectUrl := "https://www.freelancer.com.ar/projects/iphone-app-development/commerce-Mobile-App-Development-39023417/details"
+
+    GetProyect(projectUrl)
+}

@@ -16,13 +16,15 @@ func main() {
 
     projectUrl := flag.String("u", "", "project url")
     // model := flag.String("model", "deepSeek", "model can be deepSeek or gpt")
-    // temp := flag.Float64("temp", defaultTemp, "temperature of ai request")
-
+    temp := flag.Float64("temp", defaultTemp, "temperature of ai request")
     flag.Parse()
-    
-    fmt.Println(*projectUrl)
+
     if len(*projectUrl) < 2 {
         panic("project url must not be empty")
+    }
+
+    if *temp < 0 {
+        panic("temp parameter cannot be less than 0")
     }
 
     project, err := GetProyect(*projectUrl)
@@ -30,13 +32,13 @@ func main() {
         panic(err)
     }
 
-    println("\n\n--- PROYECT DESCRIPTION ---")
-    println(project.Description)
-
+    // println("\n\n--- PROYECT DESCRIPTION ---")
+    // println(project.Description)
+    //
     ai := NewAIModel(apiKey, DeepSeekChat)
 
     println("\n\n--- BID ---")
-    res, err := ai.CreateBid(project.Description)
+    res, err := ai.CreateBid(project, *temp)
     if err != nil {
         panic(err)
     }

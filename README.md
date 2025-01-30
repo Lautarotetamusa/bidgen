@@ -9,10 +9,10 @@ export openai api key
 `export AI_APIKEY=api-key`
 
 ## Usage
-`./auto-bider -u freelancer-project-url`
+`./bidgen -u freelancer-project-url`
 
 Example:
-`./auto-bider -u https://www.freelancer.com.ar/projects/iphone-app-development/commerce-Mobile-App-Development-39023417/details`
+`./bidgen -u https://www.freelancer.com.ar/projects/iphone-app-development/commerce-Mobile-App-Development-39023417/details`
 
 ## Prompt
 if you want to change the prompt, simply modify the `const prompt ` at the top of `prompt.go` file.
