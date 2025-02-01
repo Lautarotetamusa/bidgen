@@ -11,11 +11,27 @@ import (
 
 // API endpoints urls
 const (
-    baseUrl = "https://www.freelancer.com/api/"
+    defaultBaseUrl = "https://www.freelancer.com/api"
 
-    getProjects = baseUrl + "projects/0.1/projects"
-    getUser     = baseUrl + "users/0.1/users/%s" // %s: user_id
+    getProjectsPath = "projects/0.1/projects"
+    getUserPath     = "users/0.1/users/%d" // %d: user_id
 )
+
+type FreelancerAPI struct {
+    baseUrl     string
+}
+
+func NewFreelancer() *FreelancerAPI {
+    return &FreelancerAPI{
+        baseUrl: defaultBaseUrl,
+    }
+}
+
+func NewTestFreelancer(serverUrl string) *FreelancerAPI {
+    return &FreelancerAPI{
+        baseUrl: serverUrl,
+    }
+}
 
 type FreelanceResponse struct {
     Status  string  `json:"status"`
@@ -32,12 +48,12 @@ type User struct {
     Location    Location    `json:"location"`
 }
 
-
 type Project struct {
     Title       string `json:"title"`
     Description string `json:"description"`
     Budget      Budget `json:"budget"`
     Status      string `json:"status"`
+    UserId      uint32 `json:"owner_id"`
 }
 
 type Location struct {
@@ -58,8 +74,9 @@ var client *http.Client = &http.Client{
     Timeout: 15 * time.Second,
 }
 
-func GetUser(userId string) (*User, error) {
-    data, err := makeRequest(fmt.Sprintf(getUser, userId))
+func (f FreelancerAPI) GetUser(userId uint32) (*User, error) {
+    url := f.baseUrl + "/" + fmt.Sprintf(getUserPath, userId)
+    data, err := makeRequest(url)
     if err != nil {
         return nil, err
     }
@@ -72,21 +89,22 @@ func GetUser(userId string) (*User, error) {
     return &u, nil
 }
 
-func GetProyect(projectUrl string) (*Project, error) {
+func (f FreelancerAPI) GetProyect(projectUrl string) (*Project, error) {
     seoUrl := extractSeo(projectUrl)
-    u := makeUrl(seoUrl)
+    url := f.baseUrl + "/" + getProjectsPath
+    u := makeUrl(url, seoUrl)
 
     data, err := makeRequest(u.String())
     if err != nil {
         return nil, err
     }
 
-    var p ProjectResult
-    if err := json.Unmarshal(data.Result, &p); err != nil {
+    var res ProjectResult
+    if err := json.Unmarshal(data.Result, &res); err != nil {
         return nil, err
     }
 
-    return &p.Projects[0], nil
+    return &res.Projects[0], nil
 }
 
 func makeRequest(url string) (*FreelanceResponse, error) {
@@ -130,8 +148,8 @@ func extractSeo(u string) string {
     return ""
 }
 
-func makeUrl(seoUrl string) url.URL {
-    u, err := url.Parse(getProjects)
+func makeUrl(baseUrl, seoUrl string) url.URL {
+    u, err := url.Parse(baseUrl)
 	if err != nil {
         panic(err)
 	}
