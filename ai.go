@@ -13,6 +13,7 @@ const defaultTemp float64 = 1.3
 const (
     openAiapiUrl   string = "https://api.openai.com/v1/chat/completions"
     deepSeekApiUrl string = "https://api.deepseek.com/chat/completions"
+    llamaApiUrl    string = "http://localhost:11434/api/chat" 
 )
 
 type Model string
@@ -21,6 +22,7 @@ const (
     GPT4oMini       Model = "gpt-4o-mini"
     DeepSeekChat    Model = "deepseek-chat"
     DeepSeekReasone Model = "deepseek-reasone"
+    LlamaDeepSeekR1 Model = "deepseek-r1"
 )
 
 type Role string
@@ -62,6 +64,10 @@ func NewAIModel(apiKey string, model Model) *AIModel {
     chatUrl := openAiapiUrl
     if model == DeepSeekChat || model == DeepSeekReasone {
         chatUrl = deepSeekApiUrl
+    }
+
+    if model == LlamaDeepSeekR1 {
+        chatUrl = llamaApiUrl
     }
 
     return &AIModel {

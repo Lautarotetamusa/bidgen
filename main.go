@@ -27,10 +27,22 @@ func main() {
         panic("temp parameter cannot be less than 0")
     }
 
-    project, err := GetProyect(*projectUrl)
+    freelancer := NewFreelancer()
+
+    project, err := freelancer.GetProyect(*projectUrl)
     if err != nil {
         panic(err)
     }
+    fmt.Printf("%#v\n", project)
+
+    user, err := freelancer.GetUser(project.UserId)
+    if err != nil {
+        println(err.Error())
+        os.Exit(0)
+    }
+    fmt.Printf("%#v\n", user)
+
+    fmt.Printf("%s\n%s\ncliente: %s", project.Title, project.Description, user.Username)
 
     // println("\n\n--- PROYECT DESCRIPTION ---")
     // println(project.Description)

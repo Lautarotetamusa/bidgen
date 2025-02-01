@@ -18,7 +18,7 @@ Example:
 if you want to change the prompt, simply modify the `const prompt ` at the top of `prompt.go` file.
 
 # TO DO
-- [ ] temperature flag
+- [x] temperature flag
 - [ ] model flag 
 - [ ] -x flag to copy directly to the clipboard
 - [ ] add the project title and more information from the freelancer api
@@ -27,3 +27,6 @@ if you want to change the prompt, simply modify the `const prompt ` at the top o
 - [ ] stream of tokens? or some load animation while waiting for the bid
 - [ ] better prompt
 - [ ] test with english projects
+
+# IDEAS
+- extension for the web browser
